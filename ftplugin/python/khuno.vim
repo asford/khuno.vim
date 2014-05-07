@@ -256,6 +256,12 @@ function! s:Flake()
     let b:khuno_debug = {}
   endif
 
+  if exists("g:khuno_flake_options")
+    let s:khuno_flake_options = " ".g:khuno_flake_options
+  else
+    let s:khuno_flake_options = ""
+  endif
+
   if exists("g:khuno_builtins")
     let s:khuno_builtins_opt=" --builtins=".g:khuno_builtins
   else
@@ -274,11 +280,11 @@ function! s:Flake()
     let s:khuno_max_line_length=""
   endif
 
-  let cmd=g:khuno_flake_cmd . s:khuno_builtins_opt . s:khuno_ignores . s:khuno_max_line_length
+  let cmd=g:khuno_flake_cmd . s:khuno_flake_options . s:khuno_builtins_opt . s:khuno_ignores . s:khuno_max_line_length
 
   " Write to a temp path so that unmodified contents are parsed
   " correctly, regardless.
-  let tmp_path = tempname()
+  let tmp_path = tempname().".py"
   silent! execute "keepalt w " . tmp_path
   let cmd = cmd . " ". tmp_path
   let b:khuno_debug.temp_python_file = tmp_path
